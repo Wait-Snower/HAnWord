@@ -23,12 +23,13 @@
 
 ```
 HAnWord/
-├── config.py                  # 字符集配置
-├── core.py                    # 密码生成逻辑
-├── analyzer.py                # 密码分析
-├── ui.py                      # 交互界面
-├── HAnWord.py                 # 命令行入口
-├── test_hanword.py            # 测试
+├── desktop/                   # 桌面/命令行核心
+│   ├── cli.py
+│   ├── core.py
+│   ├── analyzer.py
+│   ├── config.py
+│   ├── ui.py
+│   └── __init__.py
 ├── pwa/                       # 手机离线版
 │   ├── index.html
 │   ├── app.js
@@ -36,6 +37,10 @@ HAnWord/
 │   ├── manifest.webmanifest
 │   ├── sw.js
 │   └── README.md
+├── tests/                     # 自动化测试
+│   ├── test_hanword.py
+│   └── test_pwa_parity.js
+├── HAnWord.py                 # 兼容入口，转发到 desktop/cli.py
 └── README.md
 ```
 
@@ -43,8 +48,9 @@ HAnWord/
 
 ## 版本说明
 
-- 根目录：桌面/命令行版，适合电脑终端使用
+- `desktop/` 目录：桌面/命令行版核心，适合电脑终端使用
 - `pwa/` 目录：手机离线版，适合浏览器安装到主屏幕使用
+- `tests/` 目录：桌面版与 PWA 一致性测试
 
 ---
 
@@ -54,10 +60,20 @@ HAnWord/
 
 ```bash
 # 交互模式
-python HAnWord.py
+python3 HAnWord.py
 
 # 命令行模式
-python HAnWord.py 你好世界 --length 20 --mode site --context github.com
+python3 HAnWord.py 你好世界 --length 20 --mode site --context github.com
+```
+
+### 运行测试
+
+```bash
+# Python 测试
+python3 -m unittest discover -s tests
+
+# PWA 一致性测试
+node --test tests/test_pwa_parity.js
 ```
 
 ---

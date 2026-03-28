@@ -3,8 +3,8 @@ import sys
 import unittest
 from pathlib import Path
 
-from analyzer import analyze_password
-from core import (
+from desktop.analyzer import analyze_password
+from desktop.core import (
     PBKDF2_ITERATIONS,
     generate_password,
     normalize_context,
@@ -12,7 +12,7 @@ from core import (
 )
 
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 ENTRYPOINT = ROOT / "HAnWord.py"
 
 

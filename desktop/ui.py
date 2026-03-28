@@ -1,8 +1,8 @@
 """
 用户界面模块：交互式命令行。
 """
-from analyzer import analyze_password
-from core import generate_password
+from .analyzer import analyze_password
+from .core import generate_password
 
 
 DEFAULT_LENGTH = 16

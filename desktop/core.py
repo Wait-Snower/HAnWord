@@ -3,7 +3,8 @@
 """
 import hashlib
 import unicodedata
-from config import UPPERCASE, LOWERCASE, DIGITS, SPECIAL_CHARS
+
+from .config import UPPERCASE, LOWERCASE, DIGITS, SPECIAL_CHARS
 
 
 CONTEXT_MODES = {
@@ -53,7 +54,7 @@ def hanzi_to_seed(text: str) -> int:
 
 
 def _contains_hanzi(text: str) -> bool:
-    return any('一' <= char <= '鿿' for char in text)
+    return any("一" <= char <= "鿿" for char in text)
 
 
 def _derive_bytes(hanzi_text: str, normalized_context: str, size: int) -> bytes:

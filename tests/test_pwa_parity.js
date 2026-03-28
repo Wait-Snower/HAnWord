@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-require('./pwa/app.js');
+require('../pwa/app.js');
 
 const { generatePassword } = globalThis.HAnWordPWA;
 
