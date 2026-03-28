@@ -1,4 +1,4 @@
-const APP_VERSION = '2.2.2';
+const APP_VERSION = '2.2.3';
 const MODES = {
   device: 'device',
   app: 'app',
@@ -55,8 +55,8 @@ function deriveBytes(hanziText, normalizedContext, size) {
   
   const hmacSHA256 = (key, data) => {
     const BLOCK_SIZE = 64;
-    const keyBytes = key instanceof Uint8Array ? key : strToBytes(key);
-    const dataBytes = typeof data === 'string' ? strToBytes(data) : data;
+    const keyBytes = key instanceof Uint8Array ? key : (typeof key === 'string' ? strToBytes(key) : new Uint8Array(key));
+    const dataBytes = data instanceof Uint8Array ? data : (typeof data === 'string' ? strToBytes(data) : new Uint8Array(data));
     
     if (keyBytes.length > BLOCK_SIZE) {
       keyBytes = sha256(keyBytes);
@@ -126,7 +126,7 @@ function deriveBytes(hanziText, normalizedContext, size) {
       h4 = (h4 + e) >>> 0; h5 = (h5 + f) >>> 0; h6 = (h6 + g) >>> 0; h7 = (h7 + hh) >>> 0;
     }
     
-    return [
+    return new Uint8Array([
       (h0 >>> 24) & 0xff, (h0 >>> 16) & 0xff, (h0 >>> 8) & 0xff, h0 & 0xff,
       (h1 >>> 24) & 0xff, (h1 >>> 16) & 0xff, (h1 >>> 8) & 0xff, h1 & 0xff,
       (h2 >>> 24) & 0xff, (h2 >>> 16) & 0xff, (h2 >>> 8) & 0xff, h2 & 0xff,
@@ -135,10 +135,11 @@ function deriveBytes(hanziText, normalizedContext, size) {
       (h5 >>> 24) & 0xff, (h5 >>> 16) & 0xff, (h5 >>> 8) & 0xff, h5 & 0xff,
       (h6 >>> 24) & 0xff, (h6 >>> 16) & 0xff, (h6 >>> 8) & 0xff, h6 & 0xff,
       (h7 >>> 24) & 0xff, (h7 >>> 16) & 0xff, (h7 >>> 8) & 0xff, h7 & 0xff
-    ];
+    ]);
   };
   
   const strToBytes = (str) => {
+    if (typeof str !== 'string') return new Uint8Array(0);
     const bytes = [];
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
