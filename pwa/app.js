@@ -1,4 +1,4 @@
-const APP_VERSION = '2.2.1';
+const APP_VERSION = '2.2.2';
 const MODES = {
   device: 'device',
   app: 'app',
@@ -160,13 +160,14 @@ function deriveBytes(hanziText, normalizedContext, size) {
     return c;
   };
   
+  const passwordBytes = strToBytes(password);
   const saltBytes = strToBytes(salt);
   
-  let u = hmacSHA256(password, salt);
+  let u = hmacSHA256(passwordBytes, saltBytes);
   let result = new Uint8Array(u);
   
   for (let i = 1; i < PBKDF2_ITERATIONS; i++) {
-    u = hmacSHA256(password, String.fromCharCode(...u));
+    u = hmacSHA256(passwordBytes, u);
     for (let j = 0; j < result.length; j++) {
       result[j] ^= u[j];
     }
