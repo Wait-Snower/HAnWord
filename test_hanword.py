@@ -23,6 +23,12 @@ class CoreTests(unittest.TestCase):
             generate_password("你好", 16),
         )
 
+    def test_known_password_vector_stays_stable(self):
+        self.assertEqual(
+            generate_password("中国", 24, "example.com", "site"),
+            "Em.#Lvny8}[O!kr1@e(PZqS3",
+        )
+
     def test_mode_and_context_change_password(self):
         self.assertNotEqual(
             generate_password("你好", 16, "github.com", "site"),
