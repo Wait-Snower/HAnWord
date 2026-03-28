@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#15304a">
+  <title>HAnWord PWA</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero-card">
+      <p class="eyebrow">HAnWord Mobile</p>
+      <h1>手机离线密码生成器</h1>
+      <p class="lead">记住中文输入，在手机上离线生成确定性密码。PWA 版本独立于桌面版，适合添加到主屏幕使用。</p>
+      <div class="meta-row">
+        <span class="pill" id="version-pill">版本读取中</span>
+        <span class="pill subtle" id="install-state">浏览器内打开</span>
+      </div>
+    </section>
+
+    <section class="install-card" id="install-card" hidden>
+      <div>
+        <p class="card-title">安装到主屏幕</p>
+        <p class="card-copy" id="install-copy">安装后可像普通 App 一样从桌面启动，并保留离线能力。</p>
+      </div>
+      <div class="actions">
+        <button type="button" id="install-btn">立即安装</button>
+        <button type="button" id="dismiss-install-btn" class="secondary">稍后再说</button>
+      </div>
+    </section>
+
+    <section class="update-card" id="update-card" hidden>
+      <div>
+        <p class="card-title">发现新版本</p>
+        <p class="card-copy">已检测到新的离线资源，可以立即更新。</p>
+      </div>
+      <div class="actions">
+        <button type="button" id="refresh-btn">更新到最新版</button>
+        <button type="button" id="clear-cache-btn" class="secondary">清理离线缓存</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <form id="password-form" class="form-grid">
+        <label>
+          <span>汉字输入</span>
+          <textarea id="hanzi" rows="3" placeholder="例如：春江花月夜" required></textarea>
+        </label>
+
+        <div class="row two-cols">
+          <label>
+            <span>密码长度</span>
+            <input id="length" type="number" min="8" max="64" value="16" required>
+          </label>
+          <label>
+            <span>预设模式</span>
+            <select id="mode">
+              <option value="">不使用上下文</option>
+              <option value="device">设备</option>
+              <option value="app">应用</option>
+              <option value="site">网站</option>
+              <option value="purpose">其他用途</option>
+            </select>
+          </label>
+        </div>
+
+        <label>
+          <span>上下文</span>
+          <input id="context" type="text" placeholder="例如：github.com / 微信 / 工作电脑 / 邮箱">
+        </label>
+
+        <div class="actions">
+          <button type="submit">生成密码</button>
+          <button type="button" id="copy-btn" class="secondary">复制密码</button>
+        </div>
+      </form>
+
+      <div class="result-card" id="result-card" hidden>
+        <div class="result-head">
+          <p>生成结果</p>
+          <span id="result-badge">PWA 版本</span>
+        </div>
+        <output id="password-output"></output>
+        <dl id="analysis"></dl>
+      </div>
+
+      <div class="notes">
+        <p>说明</p>
+        <ul>
+          <li>本页面完全在浏览器本地计算，不上传输入内容。</li>
+          <li>桌面版与 PWA 版使用同一套 `PBKDF2-HMAC-SHA256` 参数，相同输入应得到相同输出。</li>
+          <li>更新程序后，如果手机还显示旧结果，可点“清理离线缓存”后重新打开。</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
