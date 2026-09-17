@@ -1,4 +1,4 @@
-const APP_VERSION = '2.2.4';
+const APP_VERSION = '2.3.0';
 const MODES = {
   device: 'device',
   app: 'app',
@@ -23,18 +23,11 @@ const form = hasDocument ? document.querySelector('#password-form') : null;
 const output = hasDocument ? document.querySelector('#password-output') : null;
 const resultCard = hasDocument ? document.querySelector('#result-card') : null;
 const analysisNode = hasDocument ? document.querySelector('#analysis') : null;
-const copyBtn = hasDocument ? document.querySelector('#copy-btn') : null;
 const versionPill = hasDocument ? document.querySelector('#version-pill') : null;
-const installState = hasDocument ? document.querySelector('#install-state') : null;
-const installCard = hasDocument ? document.querySelector('#install-card') : null;
-const installBtn = hasDocument ? document.querySelector('#install-btn') : null;
-const dismissInstallBtn = hasDocument ? document.querySelector('#dismiss-install-btn') : null;
-const installCopy = hasDocument ? document.querySelector('#install-copy') : null;
 const updateCard = hasDocument ? document.querySelector('#update-card') : null;
 const refreshBtn = hasDocument ? document.querySelector('#refresh-btn') : null;
 const clearCacheBtn = hasDocument ? document.querySelector('#clear-cache-btn') : null;
 
-let deferredInstallPrompt = null;
 let waitingWorker = null;
 
 const normalizeText = (text) => text.normalize('NFKC').trim();
@@ -42,9 +35,6 @@ const containsHanzi = (text) => /[一-鿿]/u.test(text);
 
 if (versionPill) {
   versionPill.textContent = `版本 ${APP_VERSION}`;
-}
-if (installState && hasWindow) {
-  installState.textContent = window.matchMedia('(display-mode: standalone)').matches ? '已作为应用运行' : '浏览器内打开';
 }
 
 function normalizeContext(mode, context) {
@@ -126,17 +116,6 @@ function renderAnalysis(stats) {
     .join('');
 }
 
-function showInstallCard(message) {
-  if (!installCard || !installCopy) return;
-  if (message) installCopy.textContent = message;
-  installCard.hidden = false;
-}
-
-function hideInstallCard() {
-  if (!installCard) return;
-  installCard.hidden = true;
-}
-
 function showUpdateCard(worker) {
   if (!updateCard) return;
   waitingWorker = worker;
@@ -172,7 +151,7 @@ function watchRegistration(registration) {
   });
 }
 
-if (form && output && resultCard && copyBtn && installBtn && dismissInstallBtn && refreshBtn && clearCacheBtn && hasWindow && hasNavigator) {
+if (form && output && resultCard && refreshBtn && clearCacheBtn && hasWindow && hasNavigator) {
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     const hanzi = document.querySelector('#hanzi').value;
@@ -193,34 +172,6 @@ if (form && output && resultCard && copyBtn && installBtn && dismissInstallBtn &
     }
   });
 
-  copyBtn.addEventListener('click', async () => {
-    const text = output.textContent?.trim();
-    if (!text) {
-      alert('请先生成密码');
-      return;
-    }
-    await navigator.clipboard.writeText(text);
-    copyBtn.textContent = '已复制';
-    window.setTimeout(() => {
-      copyBtn.textContent = '复制密码';
-    }, 1400);
-  });
-
-  installBtn.addEventListener('click', async () => {
-    if (deferredInstallPrompt) {
-      deferredInstallPrompt.prompt();
-      await deferredInstallPrompt.userChoice.catch(() => {});
-      deferredInstallPrompt = null;
-      hideInstallCard();
-      return;
-    }
-    alert('当前浏览器没有提供自动安装按钮，请使用浏览器菜单中的“添加到主屏幕”。');
-  });
-
-  dismissInstallBtn.addEventListener('click', () => {
-    hideInstallCard();
-  });
-
   refreshBtn.addEventListener('click', () => {
     if (waitingWorker) {
       waitingWorker.postMessage({ type: 'SKIP_WAITING' });
@@ -235,20 +186,6 @@ if (form && output && resultCard && copyBtn && installBtn && dismissInstallBtn &
     window.location.reload();
   });
 
-  window.addEventListener('beforeinstallprompt', (event) => {
-    event.preventDefault();
-    deferredInstallPrompt = event;
-    showInstallCard('检测到可安装环境。安装后可从主屏幕直接打开，并继续离线使用。');
-  });
-
-  window.addEventListener('appinstalled', () => {
-    deferredInstallPrompt = null;
-    if (installState) {
-      installState.textContent = '已安装到主屏幕';
-    }
-    hideInstallCard();
-  });
-
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
       const registration = await navigator.serviceWorker.register(`./sw.js?v=${APP_VERSION}`);
@@ -256,9 +193,6 @@ if (form && output && resultCard && copyBtn && installBtn && dismissInstallBtn &
       navigator.serviceWorker.addEventListener('controllerchange', () => {
         window.location.reload();
       });
-      if (!window.matchMedia('(display-mode: standalone)').matches) {
-        showInstallCard('可将本页添加到主屏幕，像普通 App 一样打开。若浏览器没有自动安装按钮，请使用菜单中的“添加到主屏幕”。');
-      }
     });
   }
 }
