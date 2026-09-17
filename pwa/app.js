@@ -1,4 +1,4 @@
-const APP_VERSION = '2.3.0';
+const APP_VERSION = '2.3.1';
 const MODES = {
   device: 'device',
   app: 'app',
@@ -24,11 +24,7 @@ const output = hasDocument ? document.querySelector('#password-output') : null;
 const resultCard = hasDocument ? document.querySelector('#result-card') : null;
 const analysisNode = hasDocument ? document.querySelector('#analysis') : null;
 const versionPill = hasDocument ? document.querySelector('#version-pill') : null;
-const updateCard = hasDocument ? document.querySelector('#update-card') : null;
-const refreshBtn = hasDocument ? document.querySelector('#refresh-btn') : null;
 const clearCacheBtn = hasDocument ? document.querySelector('#clear-cache-btn') : null;
-
-let waitingWorker = null;
 
 const normalizeText = (text) => text.normalize('NFKC').trim();
 const containsHanzi = (text) => /[一-鿿]/u.test(text);
@@ -116,18 +112,6 @@ function renderAnalysis(stats) {
     .join('');
 }
 
-function showUpdateCard(worker) {
-  if (!updateCard) return;
-  waitingWorker = worker;
-  updateCard.hidden = false;
-}
-
-function hideUpdateCard() {
-  waitingWorker = null;
-  if (!updateCard) return;
-  updateCard.hidden = true;
-}
-
 async function clearOfflineCache() {
   const registrations = await navigator.serviceWorker.getRegistrations();
   await Promise.all(registrations.map((registration) => registration.unregister()));
@@ -135,23 +119,7 @@ async function clearOfflineCache() {
   await Promise.all(cacheNames.filter((name) => name.startsWith('hanword-pwa-')).map((name) => caches.delete(name)));
 }
 
-function watchRegistration(registration) {
-  if (registration.waiting) {
-    showUpdateCard(registration.waiting);
-  }
-
-  registration.addEventListener('updatefound', () => {
-    const worker = registration.installing;
-    if (!worker) return;
-    worker.addEventListener('statechange', () => {
-      if (worker.state === 'installed' && navigator.serviceWorker.controller) {
-        showUpdateCard(worker);
-      }
-    });
-  });
-}
-
-if (form && output && resultCard && refreshBtn && clearCacheBtn && hasWindow && hasNavigator) {
+if (form && output && resultCard && clearCacheBtn && hasWindow && hasNavigator) {
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     const hanzi = document.querySelector('#hanzi').value;
@@ -172,14 +140,6 @@ if (form && output && resultCard && refreshBtn && clearCacheBtn && hasWindow && 
     }
   });
 
-  refreshBtn.addEventListener('click', () => {
-    if (waitingWorker) {
-      waitingWorker.postMessage({ type: 'SKIP_WAITING' });
-    } else {
-      window.location.reload();
-    }
-  });
-
   clearCacheBtn.addEventListener('click', async () => {
     await clearOfflineCache();
     alert('已清理离线缓存，页面将重新加载。');
@@ -188,11 +148,7 @@ if (form && output && resultCard && refreshBtn && clearCacheBtn && hasWindow && 
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
-      const registration = await navigator.serviceWorker.register(`./sw.js?v=${APP_VERSION}`);
-      watchRegistration(registration);
-      navigator.serviceWorker.addEventListener('controllerchange', () => {
-        window.location.reload();
-      });
+      await navigator.serviceWorker.register(`./sw.js?v=${APP_VERSION}`);
     });
   }
 }

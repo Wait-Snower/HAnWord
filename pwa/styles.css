@@ -24,7 +24,7 @@ body {
   margin: 0 auto;
   padding: 24px 0 48px;
 }
-.hero-card, .panel, .update-card {
+.hero-card, .panel {
   background: var(--panel);
   backdrop-filter: blur(18px);
   border: 1px solid var(--line);
@@ -34,22 +34,6 @@ body {
 .hero-card {
   padding: 28px;
   margin-bottom: 18px;
-}
-.update-card {
-  display: grid;
-  gap: 14px;
-  padding: 18px 20px;
-  margin-bottom: 18px;
-  background: linear-gradient(135deg, rgba(21, 48, 74, 0.14), rgba(255, 252, 247, 0.9));
-}
-.card-title {
-  margin: 0 0 6px;
-  font-size: 1.02rem;
-  font-weight: 700;
-}
-.card-copy {
-  margin: 0;
-  line-height: 1.6;
 }
 .eyebrow {
   margin: 0 0 8px;
@@ -86,6 +70,18 @@ h1 {
 .pill.subtle {
   background: rgba(255, 255, 255, 0.72);
   border: 1px solid var(--line);
+}
+#clear-cache-btn {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--ink);
+  box-shadow: none;
+  padding: 7px 12px;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+#clear-cache-btn:active {
+  background: rgba(21, 48, 74, 0.1);
 }
 .panel { padding: 22px; }
 .form-grid, .result-card { display: grid; gap: 14px; }
@@ -172,5 +168,5 @@ dd { margin: 2px 0 0; font-weight: 700; }
 @media (max-width: 640px) {
   .row.two-cols, dl { grid-template-columns: 1fr; }
   .app-shell { width: min(100vw - 18px, 760px); padding-top: 14px; }
-  .hero-card, .panel, .update-card { border-radius: 22px; }
+  .hero-card, .panel { border-radius: 22px; }
 }
