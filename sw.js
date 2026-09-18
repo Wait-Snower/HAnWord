@@ -1,4 +1,4 @@
-const APP_VERSION = '2.2.4';
+const APP_VERSION = '2.3.1';
 const CACHE_NAME = `hanword-pwa-${APP_VERSION}`;
 const ASSETS = [
   './',

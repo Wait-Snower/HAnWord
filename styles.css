@@ -24,7 +24,7 @@ body {
   margin: 0 auto;
   padding: 24px 0 48px;
 }
-.hero-card, .panel, .install-card, .update-card {
+.hero-card, .panel {
   background: var(--panel);
   backdrop-filter: blur(18px);
   border: 1px solid var(--line);
@@ -34,27 +34,6 @@ body {
 .hero-card {
   padding: 28px;
   margin-bottom: 18px;
-}
-.install-card, .update-card {
-  display: grid;
-  gap: 14px;
-  padding: 18px 20px;
-  margin-bottom: 18px;
-}
-.install-card {
-  background: linear-gradient(135deg, rgba(201, 107, 44, 0.16), rgba(255, 252, 247, 0.9));
-}
-.update-card {
-  background: linear-gradient(135deg, rgba(21, 48, 74, 0.14), rgba(255, 252, 247, 0.9));
-}
-.card-title {
-  margin: 0 0 6px;
-  font-size: 1.02rem;
-  font-weight: 700;
-}
-.card-copy {
-  margin: 0;
-  line-height: 1.6;
 }
 .eyebrow {
   margin: 0 0 8px;
@@ -92,8 +71,20 @@ h1 {
   background: rgba(255, 255, 255, 0.72);
   border: 1px solid var(--line);
 }
+#clear-cache-btn {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--ink);
+  box-shadow: none;
+  padding: 7px 12px;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+#clear-cache-btn:active {
+  background: rgba(21, 48, 74, 0.1);
+}
 .panel { padding: 22px; }
-.form-grid, .notes, .result-card { display: grid; gap: 14px; }
+.form-grid, .result-card { display: grid; gap: 14px; }
 label { display: grid; gap: 8px; }
 span { font-size: 0.95rem; }
 textarea, input, select, button, output { font: inherit; }
@@ -162,26 +153,21 @@ button.secondary {
   overflow-wrap: anywhere;
   font-family: "IBM Plex Mono", monospace;
   font-size: 1.04rem;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 dl {
   margin: 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
+  font-family: "IBM Plex Mono", monospace;
 }
 dt { opacity: 0.8; }
 dd { margin: 2px 0 0; font-weight: 700; }
-.notes {
-  margin-top: 18px;
-  padding: 18px;
-  border-radius: 22px;
-  border: 1px dashed rgba(21,48,74,0.18);
-  background: rgba(255,255,255,0.48);
-}
-.notes p, .notes ul { margin: 0; }
-.notes ul { padding-left: 18px; line-height: 1.65; }
 @media (max-width: 640px) {
   .row.two-cols, dl { grid-template-columns: 1fr; }
   .app-shell { width: min(100vw - 18px, 760px); padding-top: 14px; }
-  .hero-card, .panel, .install-card, .update-card { border-radius: 22px; }
+  .hero-card, .panel { border-radius: 22px; }
 }
