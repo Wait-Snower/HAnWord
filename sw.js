@@ -1,4 +1,4 @@
-const APP_VERSION = '2.3.1';
+const APP_VERSION = '2.3.2';
 const CACHE_NAME = `hanword-pwa-${APP_VERSION}`;
 const ASSETS = [
   './',
@@ -6,6 +6,11 @@ const ASSETS = [
   './styles.css',
   './app.js',
   './manifest.webmanifest',
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './icons/icon-maskable-512.png',
+  './icons/apple-touch-icon.png',
+  './icons/favicon.png',
 ];
 
 self.addEventListener('install', (event) => {
